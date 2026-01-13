@@ -1,0 +1,46 @@
+v:2.1.10
+Cons. Operadores Caixa Operando nas Lojas/PDV
+Use o botão direito sobre o item para acessar o menu.
+
+
+
+
+
+
+
+
+
+
+SELECT t1.nroempresa NRO_EMPRESA`~     , t1.NOMEREDUZIDO EMPRESA `~     , t1.nrocheckout PDV`~     , t1.sequsuario SEQ_USUÁRIO`~     , t1.cracha`~     , t1.nome`~     , TO_CHAR(t1.hora_evento, 'DD/MM/YYYY - HH24:MI:SS') AS Horário_Abertura_PDV`~       `~FROM (`~        SELECT a.nroempresa`~             , emp.nomereduzido`~             , a.nrocheckout`~             , a.sequsuario`~             , u.codusuario AS cracha`~             , u.nome`~             , a.dtahoremissao AS hora_evento`~             , a.metodo`~             , LAG(a.metodo) OVER (PARTITION BY a.sequsuario ORDER BY a.dtahoremissao) AS metodo_anterior`~             , LAG(a.dtahoremissao) OVER (PARTITION BY a.sequsuario ORDER BY a.dtahoremissao) AS hora_anterior`~        FROM consincomonitor.tb_logsegurancapdv a`~        JOIN ge_usuario u ON u.sequsuario = a.sequsuario`~        JOIN max_empresa emp ON emp.nroempresa = a.nroempresa`~       WHERE a.metodo IN ('mtAbrirCaixa')`~         AND TRUNC(a.dtahoremissao) BETWEEN :DT1 AND :DT2`~         AND a.nrocheckout = DECODE(:LT1, 0, a.nrocheckout, :LT1)`~     ) t1`~WHERE t1.metodo = 'mtAbrirCaixa'`~  AND t1.cracha = DECODE(:LT2, 0, t1.cracha, :LT2)`~  AND (upper(t1.nome) like '%' || upper(:lt3) || '%')`~  AND (:LS1 = ' TODAS' OR t1.nomereduzido = :LS1)`~`~ORDER BY t1.nroempresa, t1.nrocheckout, t1.nome, t1.sequsuario, t1.hora_evento DESC;`~
+
+
+
+
+#CS:104136
+*** End Top
+DT1
+Data Inicial:
+Informe a Data Inicial Desejada.
+HOJE
+DT2
+Data Final:
+Informe a Data Final Desejada.
+HOJE
+LS1
+Empresa:
+Selecione a Empresa Desejada ou "TODAS" para Selecionar TODAS as Empresas de Uma Vez.
+N
+L
+SELECT A.NOMEREDUZIDO FROM MAX_EMPRESA A`~UNION`~SELECT ' TODAS' FROM DUAL;`~ORDER BY 1;
+LT1
+Nº. PDV:
+Informe o Número do Checkout Desejado ou "0" (ZERO), Para Listar TODOS.
+0
+LT2
+Nº. Crachá Operador:
+Informe o Número do Crachá Desejado ou "0" (Zero), Para Listar TODOS.
+0
+LT3
+Nome Operador:
+Informe o Nome do Operador Desejado ou "%" Para Listar TODOS.
+%
