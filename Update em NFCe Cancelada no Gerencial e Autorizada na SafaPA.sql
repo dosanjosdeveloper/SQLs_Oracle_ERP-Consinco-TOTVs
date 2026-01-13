@@ -1,0 +1,3 @@
+-- Iniciando as 04/04/2025 16:05hs 
+-- select  e.statusnfe,e.*,rowid from mfl_doctofiscal e where e.nroempresa = 5 and e. seriedf in ('107') and e.dtamovimento = '14feb2025' e.numerodf in (256102) and 
+-- select * from rf_notamestre d where d.codmodelo = '65'
